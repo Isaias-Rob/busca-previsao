@@ -1,7 +1,6 @@
 """
 buscar previsao
 """
-from tkinter.ttk import Style
 import toga
 import requests
 from toga.style import Pack
@@ -28,7 +27,7 @@ class busca_previsao(toga.App):
         min_label_hj = toga.Label(text=str("Minima: ")+str(self.pega_minima_hoje()),style=Pack(color = "Blue"))
         desc_label_hj = toga.Label(text=str("                             ")+str(self.pega_description()),style=Pack(color = "Black",font_size=12))
         sep_label = toga.Label(text="\n\n\n\n")
-        semana_table = toga.Table(headings=["Dia", "Max", "Min"])
+        semana_table = toga.Table(headings=["Dia", "Max", "Min"],missing_value="Null")
         self.pega_previsao(semana_table)
 
         main_box.add(title_label)
