@@ -6,7 +6,7 @@ import requests
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
 import datetime
-
+#import httpx
 
 class busca_previsao(toga.App):
 
@@ -25,6 +25,7 @@ class busca_previsao(toga.App):
         hoje_label = toga.Label(text="Hoje: ", style=Pack(font_family = "monospace", color = "Grey"))
         max_label_hj = toga.Label(text=str("Maxima: ")+str(self.pega_maxima_hoje()),style=Pack(color = "Red"))
         min_label_hj = toga.Label(text=str("Minima: ")+str(self.pega_minima_hoje()),style=Pack(color = "Blue"))
+        atual_label = toga.Label(text=str(self.pega_temperatura_atual())+str("º"),style=Pack(color='Green',font_size=12))
         desc_label_hj = toga.Label(text=str("                             ")+str(self.pega_description()),style=Pack(color = "Black",font_size=12))
         sep_label = toga.Label(text="\n\n\n\n")
         semana_table = toga.Table(headings=["Dia", "Max", "Min"],missing_value="Null")
@@ -35,6 +36,7 @@ class busca_previsao(toga.App):
         today_box.add(max_label_hj)
         today_box.add(min_label_hj)
         today_box.add(desc_label_hj)
+        today_box.add(atual_label)
         semana_box.add(sep_label)
         semana_box.add(semana_table)
 
@@ -47,6 +49,7 @@ class busca_previsao(toga.App):
     def pega_maxima_hoje(self):
         url_api = "https://api.hgbrasil.com/weather?woeid=455822"
         response = requests.get(url_api)
+        #response = httpx.get(url_api)
         result = response.json() if response.status_code == 200 else None
         now = datetime.datetime.now()
         now_day_month = str(f"{now.day:02d}")+"/"+str(now.month)
@@ -59,12 +62,14 @@ class busca_previsao(toga.App):
     def pega_cidade(self):
         url_api = "https://api.hgbrasil.com/weather?woeid=455822"
         response = requests.get(url_api)
+        #response = httpx.get(url_api)
         result = response.json() if response.status_code == 200 else None
         return result["results"]["city"] if not result == None else "Nulo"
 
     def pega_minima_hoje(self):
         url_api = "https://api.hgbrasil.com/weather?woeid=455822"
         response = requests.get(url_api)
+        #response = httpx.get(url_api)
         result = response.json() if response.status_code == 200 else None
         now = datetime.datetime.now()
         now_day_month = str(f"{now.day:02d}")+"/"+str(now.month)
@@ -76,6 +81,7 @@ class busca_previsao(toga.App):
     def pega_previsao(self, semana_table):
         url_api = "https://api.hgbrasil.com/weather?woeid=455822"
         response = requests.get(url_api)
+        #response = httpx.get(url_api)
         result = response.json() if response.status_code == 200 else None
         for res in result["results"]["forecast"]:
             semana_table.data.append(res["weekday"],res["max"],res["min"])
@@ -84,8 +90,16 @@ class busca_previsao(toga.App):
     def pega_description(self):
         url_api = "https://api.hgbrasil.com/weather?woeid=455822"
         response = requests.get(url_api)
+        #response = httpx.get(url_api)
         result = response.json() if response.status_code == 200 else None
         return result["results"]["description"] if not result == None else "Nulo"
+
+    def pega_temperatura_atual(self):
+        url_api = "https://api.hgbrasil.com/weather?woeid=455822"
+        response = requests.get(url_api)
+        #response = httpx.get(url_api)
+        result = response.json() if response.status_code == 200 else None
+        return result["results"]["temp"] if not result == None else "Nulo"
 
 def main():
     return busca_previsao()
